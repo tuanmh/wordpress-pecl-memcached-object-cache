@@ -1532,8 +1532,10 @@ class WP_Object_Cache {
 
 		// getMulti returns a map of `[ cache_key => value ]` but we need to
 		// return a map of `[ option_name => value ]`
-		//$data = array_combine( $keys, $data );
-
+		// Merging data from cache server and keys
+                // In multi nodes environment, data returned from server would not be in order as the order of the keys passed in.
+                // For example: keys = array("a", "b", "c"), data returned = array("a" => "valueA", "c" => "valueC", "b" => "valueB") 
+                // Hence, it is important to get correct data for specific key, otherwise, the data would end up in mixed state.
 		$retData = array();
 		foreach($keys as $optionKey){
 			$derivedKey = $this->buildKey($optionKey, 'options');
